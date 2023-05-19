@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/Rahul Singh/Downloads/Ex_Files_SQL_EssT/WSDA_Music.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="125"/><column_width id="3" width="5253"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,6:mainArtist"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="Album" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="84"/><column index="2" value="280"/><column index="3" value="76"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Artist" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort><column index="2" mode="0"/></sort><column_widths><column index="1" value="76"/><column index="2" value="187"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">/*
+Created By:Rohit kumar
+Create Date:05/19/2023
+Descriptions:Project from LinkdIn of SQL essentials training(Solution 1) 
+Challenge: Analyse WSDA's Data
+Q1:How many transaction took place between the year 2011 and 2012?
+Q2:How much money did  WSDA make during same year?
+*/
+--1.How many transaction took place between the year 2011 and 2012?
+ 
+SELECT 
+   COUNT(*)
+FROM
+    Invoice
+	WHERE
+	InvoiceDate &gt;= '2011-01-01' AND InvoiceDate &lt;='2012-12-31'
+
+	
+--2.How much money did  WSDA make during same year?
+  SELECT
+      Sum(total)
+ FROM
+      Invoice
+ WHERE 
+    InvoiceDate &gt;= '2011-01-01' AND InvoiceDate &lt;='2012-12-31'
+	</sql><sql name="SQL 2">/*
+Created By:Rohit kumar
+Create Date:05/19/2023
+Descriptions:Project from LinkdIn of SQL essentials training(Solution 1) 
+Challenge 2: Get a List of suspects
+Q1:Get a list of customer who made purchases between 2011-2012?
+Q2:Get a list of customer,sales reps,total transaction amounts for each cutomer between 2011-2012?
+Q3:How many transaction amount are above the average transaction during the same time?
+Q4:What was the average transaction amount for each year that WSDA music Co has been in business ?
+*/
+
+--1:Get a list of customer who made purchases between 2011-2012?
+SELECT 
+   c.FirstName,
+   c.LastName,
+   i.total
+   FROM
+   Invoice i
+ INNER JOIN
+    Customer c
+ON i.CustomerId = c.CustomerId
+WHERE
+    InvoiceDate &gt;='2011-01-01' AND InvoiceDate &lt;='2012-12-31'
+ORDER BY
+  i.total DESC
+  
+  
+  
+ --2:Get a list of customer,sales reps,total transaction amounts for each customer between 2011-2012? 
+ SELECT 
+  c.FirstName AS[Customer FN],
+  c.LastName AS[Customer LN],
+  e.FirstName AS[Employee FN],
+  e.LastName AS[Employee LN],
+  i.total
+  
+  FROM
+  Invoice i
+  INNER JOIN
+  Customer c
+  ON i.CustomerId=c.CustomerId
+  INNER JOIN
+  Employee e
+  ON e.EmployeeId=c.SupportRepId
+  WHERE
+   InvoiceDate &gt;='2011-01-01' AND InvoiceDate &lt;='2012-12-31'
+  ORDER BY
+  i.total DESC
+  
+ 
+--3.How many transaction amount are above the average transaction during the same time?
+ 
+--Find the Average amount betwenn 2011 and 2012?
+SELECT 
+   round(avg(total),2)AS[Avg Transaction Amount]
+   FROM
+  Invoice
+  WHERE
+  InvoiceDate &gt;='2011-01-01' AND InvoiceDate &lt;='2012-12-31'
+--Get the above the average transaction during the same time
+
+SELECT 
+   count(total)AS[Num of Transaction above Avg]
+FROM
+  Invoice
+  WHERE
+  total &gt;
+  (
+  SELECT
+   round(avg(total),2)AS[Avg Transaction Amount]
+   FROM
+  Invoice
+  WHERE
+  InvoiceDate &gt;='2011-01-01' AND InvoiceDate &lt;='2012-12-31'
+  )
+ AND 
+InvoiceDate&gt;= '20    11-01-01' AND InvoiceDate &lt;='2012-12-31'  
+
+--4:What was the average transaction amount for each year that WSDA music Co has been in business?
+SELECT 
+   round(avg(total),2)AS[Avg Transaction Amount],
+   strftime('%Y',InvoiceDate)AS[YEAR]
+   FROM
+   Invoice
+   GROUP BY
+   strftime('%Y',InvoiceDate)
+   
+
+
+
+
+
+
+
+
+  </sql><current_tab id="0"/></tab_sql></sqlb_project>
